@@ -9,8 +9,8 @@
       Title="Szerzodesiras">
 
     <Grid>
-        <Button x:Name="doneBtn" Content="Done" HorizontalAlignment="Left" Margin="289,407,0,0" VerticalAlignment="Top" Width="101" Height="33" Click="doneBtn_Click"/>
-        <Button x:Name="backBtn" Content="Back" HorizontalAlignment="Left" Margin="412,407,0,0" VerticalAlignment="Top" Width="101" Height="33" Click="backBtn_Click"/>
+        <Button x:Name="doneBtn" Content="Done" HorizontalAlignment="Left" Margin="289,350,0,0" VerticalAlignment="Top" Width="101" Height="33" Click="doneBtn_Click"/>
+        <Button x:Name="backBtn" Content="Back" HorizontalAlignment="Left" Margin="412,350,0,0" VerticalAlignment="Top" Width="101" Height="33" Click="backBtn_Click"/>
 
     </Grid>
 </Page>

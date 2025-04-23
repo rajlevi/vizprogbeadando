@@ -22,6 +22,7 @@ namespace Autokereskedes
     //NavigationService.Navigate(new oldalnev())
     public partial class LoginPage : Page
     {
+       
         public LoginPage()
         {
             InitializeComponent();

@@ -37,7 +37,8 @@ namespace Autokereskedes
 
         private void szerzodesBtn_Click(object sender, RoutedEventArgs e)
         {
-            bool admin = false;
+            NavigationService.Navigate(new Szerzodesiras());
+           /* bool admin = false;
             if (admin == true)
             {
                 NavigationService.Navigate(new Szerzodesiras());
@@ -45,7 +46,7 @@ namespace Autokereskedes
             else
             {
                 MessageBox.Show("Nincs jogosultsagod!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+            }*/
         }
 
         private void logoutBtn_Click(object sender, RoutedEventArgs e)

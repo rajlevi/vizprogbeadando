@@ -20,6 +20,7 @@ namespace Autokereskedes
     /// </summary>
     public partial class Register : Page
     {
+       
         public Register()
         {
             InitializeComponent();
@@ -27,12 +28,17 @@ namespace Autokereskedes
 
         private void registerBtn_Click(object sender, RoutedEventArgs e)
         {
-            MessageBoxResult result = MessageBox.Show("Sikeres regisztráció!","Succes!",MessageBoxButton.OK, MessageBoxImage.Information);
-            if (result == MessageBoxResult.OK && this.NavigationService.CanGoBack)
-            {
-                this.NavigationService.GoBack();
-            }
-
-        }
+            
+       }
+            
+            
+        
     }
 }
+        
+            
+       
+            
+        
+    
+
