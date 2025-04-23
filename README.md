@@ -1,0 +1,2 @@
+# vizprogbeadando
+vizualis programozas beadando
