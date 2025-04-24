@@ -20,39 +20,85 @@ namespace Autokereskedes
     /// </summary>
     public partial class AutoLista : Page
     {
-        private List<string> autok = new List<string>
-    {
-        "Audi - A4 - 5000",
-        "BMW - 320 - 6000",
-        "Ford - Focus - 4000",
-        "Audi - A3 - 4500",
-        "Mercedes - C200 - 7000"
-    };
+        public class Auto
+        {
+            public string Marka { get; set; }
+            public string Tipus { get; set; }
+            public int Ar { get; set; }
 
+            public override string ToString()
+            {
+                return $"{Marka} - {Tipus} - {Ar} Ft";
+            }
+        }
+
+        List<Auto> autoLista = new List<Auto>
+{
+    new Auto { Marka = "Toyota", Tipus = "Corolla", Ar = 3000000 },
+    new Auto { Marka = "BMW", Tipus = "320i", Ar = 4500000 },
+    new Auto { Marka = "Audi", Tipus = "A4", Ar = 5000000 },
+    new Auto { Marka = "Suzuki", Tipus = "Swift", Ar = 2000000 }
+};
         public AutoLista()
         {
             InitializeComponent();
-      ResultsListBox.ItemsSource = autok;
+            ResultsListBox.ItemsSource = autoLista;
         }
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
             // Az autók listájának inicializálása
-            ResultsListBox.ItemsSource = autok;
+            
         }
 
         private void keresesBtn_Click(object sender, RoutedEventArgs e)
         {
             string keresettSzoveg = SearchTextBox.Text.ToLower();
+            List<Auto> talalatok = new List<Auto>();
 
-     
+            if (MarkaRadio.IsChecked == true)
+            {
+                talalatok = autoLista
+                    .Where(a => a.Marka.ToLower().Contains(keresettSzoveg))
+                    .ToList();
+            }
+            else if (TipusRadio.IsChecked == true)
+            {
+                talalatok = autoLista
+                    .Where(a => a.Tipus.ToLower().Contains(keresettSzoveg))
+                    .ToList();
+            }
+            else if (ArRadio.IsChecked == true)
+            {
+                if (int.TryParse(keresettSzoveg, out int keresettAr))
+                {
+                    talalatok = autoLista
+                        .Where(a => a.Ar == keresettAr)
+                        .ToList();
+                }
+                else
+                {
+                    MessageBox.Show("Kérlek számot adj meg az árhoz!", "Hibás bevitel", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+            }
+            else
+            {
+                MessageBox.Show("Válassz ki egy keresési feltételt!", "Hiányzó választás", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
 
-            // Keresés: ha a szöveg bármelyik mezőben előfordul
-            var talalatok = autok.Where(a => a.ToLower().Contains(keresettSzoveg)).ToList();
+            if (talalatok.Count == 0)
+            {
+                MessageBox.Show("Nem található adat a megadott mező alapján.", "Nincs találat", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
 
-            // Listázás
             ResultsListBox.ItemsSource = talalatok;
         }
+
+        
+
 
         private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {

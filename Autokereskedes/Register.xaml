@@ -9,14 +9,14 @@
       Title="Register">
 
     <Grid>
-        <Label x:Name="UsernameTextBox" Content="Username:" HorizontalAlignment="Left" Margin="303,92,0,0" VerticalAlignment="Top"/>
-        <Label x:Name="JoinYearTextBox" Content="Csatlakozasi ev:" HorizontalAlignment="Left" Margin="303,123,0,0" VerticalAlignment="Top"/>
-        <Label x:Name="PhoneTextBox" Content="Telefonszám:" HorizontalAlignment="Left" Margin="303,149,0,0" VerticalAlignment="Top"/>
-        <Label x:Name="PasswordTextBox" Content="Jelszo:" HorizontalAlignment="Left" Margin="303,175,0,0" VerticalAlignment="Top"/>
-        <TextBox HorizontalAlignment="Left" Margin="374,96,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120"/>
-        <TextBox HorizontalAlignment="Left" Margin="352,180,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120"/>
-        <TextBox HorizontalAlignment="Left" Margin="386,154,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120"/>
-        <TextBox HorizontalAlignment="Left" Margin="400,127,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120"/>
+        <Label  Content="Username:" HorizontalAlignment="Left" Margin="303,92,0,0" VerticalAlignment="Top"/>
+        <Label  Content="Csatlakozasi ev:" HorizontalAlignment="Left" Margin="303,123,0,0" VerticalAlignment="Top"/>
+        <Label  Content="Telefonszám:" HorizontalAlignment="Left" Margin="303,149,0,0" VerticalAlignment="Top"/>
+        <Label  Content="Jelszo:" HorizontalAlignment="Left" Margin="303,175,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="UsernameTextBox" HorizontalAlignment="Left" Margin="374,96,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120"/>
+        <TextBox x:Name="PasswordTextBox" HorizontalAlignment="Left" Margin="352,180,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120"/>
+        <TextBox x:Name="PhoneTextBox" HorizontalAlignment="Left" Margin="386,154,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120"/>
+        <TextBox x:Name="JoinYearTextBox" HorizontalAlignment="Left" Margin="400,127,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120"/>
         <Button x:Name="registerBtn" Content="Register" HorizontalAlignment="Left" Margin="363,253,0,0" VerticalAlignment="Top" Width="98" Height="29" Click="registerBtn_Click"/>
 
     </Grid>
