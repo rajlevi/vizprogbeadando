@@ -9,3 +9,5 @@ Regisztráció: wsrehsrhsr, mon@gmail.com, 2025. 04. 06., szerepkör: admin, id�
 Bejelentkezés: mon@gmail.com, szerepkör: admin, időpont: 2025. 04. 28. 15:01:44
 Regisztráció: rhdsh, 123@gmail.com, 2025. 04. 04., szerepkör: admin, időpont: 2025. 04. 28. 15:02:53
 Bejelentkezés: 123@gmail.com, szerepkör: admin, időpont: 2025. 04. 28. 15:03:04
+Regisztráció: asd, asd@asd.com, 2025. 04. 28., szerepkör: admin, időpont: 2025. 04. 28. 21:46:00
+Bejelentkezés: asd@asd.com, szerepkör: admin, időpont: 2025. 04. 28. 21:46:06

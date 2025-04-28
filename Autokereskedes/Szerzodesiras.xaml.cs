@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,6 +15,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using PdfSharp.Pdf;
 using PdfSharp.Drawing;
+using PdfSharp.Fonts;
 
 namespace Autokereskedes
 {
@@ -25,6 +27,31 @@ namespace Autokereskedes
         public Szerzodesiras()
         {
             InitializeComponent();
+        }
+        public class CustomFontResolver : IFontResolver
+        {
+
+            public string DefaultFontName => "TimesNewRoman";
+
+            public byte[] GetFont(string faceName)
+            {
+                // Betűtípus betöltése a fájlrendszerből
+                if (faceName == "TimesNewRoman")
+                {
+                    return File.ReadAllBytes(@"C:\Windows\Fonts\times.ttf"); // betűtípus fájl elérési útja
+                }
+                throw new ArgumentException($"A betűtípus nem található: {faceName}");
+            }
+
+            public FontResolverInfo ResolveTypeface(string familyName, bool isBold, bool isItalic)
+            {
+                // Betűtípusok hozzárendelése
+                if (familyName.Equals("TimesNewRoman", StringComparison.OrdinalIgnoreCase))
+                {
+                    return new FontResolverInfo("TimesNewRoman");
+                }
+                throw new ArgumentException($"A betűtípus nem támogatott: {familyName}");
+            }
         }
 
         private void doneBtn_Click(object sender, RoutedEventArgs e)
@@ -39,6 +66,8 @@ namespace Autokereskedes
 
         private void pdfBtn_Click(object sender, RoutedEventArgs e)
         {
+
+            PdfSharp.Fonts.GlobalFontSettings.FontResolver = new CustomFontResolver();
             ErrorTextBlock.Visibility = Visibility.Collapsed;
             ErrorTextBlock.Text = "";
 
@@ -78,9 +107,9 @@ namespace Autokereskedes
                     doc.Info.Title = "Autó adásvételi szerződés";
                     var page = doc.AddPage();
                     var gfx = XGraphics.FromPdfPage(page);
-                    var font = new XFont("Times-Roman", 12);
+                    var font = new XFont("TimesNewRoman", 12);
                     double y = 40;
-                    gfx.DrawString("Autó adásvételi szerződés", new XFont("Times-Roman", 16), XBrushes.Black, 40, y);
+                    gfx.DrawString("Autó adásvételi szerződés", new XFont("TimesNewRoman", 16), XBrushes.Black, 40, y);
                     y += 40;
                     gfx.DrawString($"Eladó neve: {eladoNev}", font, XBrushes.Black, 40, y); y += 20;
                     gfx.DrawString($"Eladó címe: {eladoCim}", font, XBrushes.Black, 40, y); y += 30;
