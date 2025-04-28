@@ -12,6 +12,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Autokereskedes;
+using PdfSharp.Drawing;
 
 namespace Autokereskedes
 {
@@ -20,19 +22,25 @@ namespace Autokereskedes
     /// </summary>
     public partial class KereskedesLista : Page
     {
-        private List<string> kereskedesek = new List<string>
-    {
-        "Karcsi Autóház - Budapest",
-        "MaxiCar - Debrecen",
-        "AutoPlaza - Győr",
-        "CityAutó - Szeged",
-        "LuxCar - Budapest"
-    };
+        private List<Kereskedes> kereskedesek = new List<Kereskedes>
+        {
+            new Kereskedes { KereskedesID = 1, Nev = "Karcsi Autóház", Varos = "Budapest", Utca = "Fő utca 1.", Jegyzekszam = "12345", Szerviz = "Van", Ferohely = 50 },
+            new Kereskedes { KereskedesID = 2, Nev = "MaxiCar", Varos = "Debrecen", Utca = "Kossuth tér 2.", Jegyzekszam = "23456", Szerviz = "Nincs", Ferohely = 30 },
+            new Kereskedes { KereskedesID = 3, Nev = "AutoPlaza", Varos = "Győr", Utca = "Petőfi S. u. 3.", Jegyzekszam = "34567", Szerviz = "Van", Ferohely = 40 },
+            new Kereskedes { KereskedesID = 4, Nev = "CityAutó", Varos = "Szeged", Utca = "Dóm tér 4.", Jegyzekszam = "45678", Szerviz = "Nincs", Ferohely = 25 },
+            new Kereskedes { KereskedesID = 5, Nev = "LuxCar", Varos = "Budapest", Utca = "Andrássy út 5.", Jegyzekszam = "56789", Szerviz = "Van", Ferohely = 60 }
+        };
 
         public KereskedesLista()
         {
             InitializeComponent();
-            ResultsListBox.ItemsSource = kereskedesek;
+            // IDE KELL AZ ADATBÁZISBÓL BETÖLTENI A KERESKEDÉSEKET, ha majd csatlakoztatod az adatbázist:
+            // Példa Entity Framework esetén:
+            // using (var context = new SajatDbContext())
+            // {
+            //     kereskedesek = context.Kereskedesek.ToList();
+            // }
+            ResultsDataGrid.ItemsSource = kereskedesek;
         }
 
         private void backBtn_Click(object sender, RoutedEventArgs e)
@@ -40,40 +48,38 @@ namespace Autokereskedes
             NavigationService.GoBack();
         }
 
-        private void keresesBtn_Click(object sender, RoutedEventArgs e)
+
+
+        private void Kereses_TextChanged(object sender, TextChangedEventArgs e)
         {
-            string keresettSzoveg = SearchTextBox.Text.ToLower();
+            string nev = NevTextBox.Text.ToLower();
+            string varos = VarosTextBox.Text.ToLower();
+            string utca = UtcaTextBox.Text.ToLower();
+            string jegyzekszam = JegyzekszamTextBox.Text.ToLower();
+            string szerviz = SzervizTextBox.Text.ToLower();
+            string ferohely = FerohelyTextBox.Text.ToLower();
 
-            // Ha üres a kereső, mutasson mindent
-            if (string.IsNullOrWhiteSpace(keresettSzoveg))
-            {
-                ResultsListBox.ItemsSource = kereskedesek;
-                return;
-            }
+            var talalatok = kereskedesek.Where(k =>
+                (string.IsNullOrWhiteSpace(nev) || k.Nev.ToLower().Contains(nev)) &&
+                (string.IsNullOrWhiteSpace(varos) || k.Varos.ToLower().Contains(varos)) &&
+                (string.IsNullOrWhiteSpace(utca) || k.Utca.ToLower().Contains(utca)) &&
+                (string.IsNullOrWhiteSpace(jegyzekszam) || k.Jegyzekszam.ToLower().Contains(jegyzekszam)) &&
+                (string.IsNullOrWhiteSpace(szerviz) || k.Szerviz.ToLower().Contains(szerviz)) &&
+                (string.IsNullOrWhiteSpace(ferohely) || k.Ferohely.ToString().Contains(ferohely))
+            ).ToList();
 
-            List<string> talalatok = new List<string>();
-
-            foreach (var item in kereskedesek)
-            {
-                var reszek = item.Split('-');
-                if (reszek.Length >= 2)
-                {
-                    string kereskedoNev = reszek[0].Trim().ToLower();
-                    string varos = reszek[1].Trim().ToLower();
-
-                    if (RadioKereskedes.IsChecked == true && kereskedoNev.Contains(keresettSzoveg))
-                    {
-                        talalatok.Add(item);
-                    }
-                    else if (RadioVaros.IsChecked == true && varos.Contains(keresettSzoveg))
-                    {
-                        talalatok.Add(item);
-                    }
-                }
-            }
-
-            ResultsListBox.ItemsSource = talalatok;
-
+            ResultsDataGrid.ItemsSource = talalatok;
         }
+    }
+
+    public class Kereskedes
+    {
+        public int KereskedesID { get; set; }
+        public string Nev { get; set; }
+        public string Varos { get; set; }
+        public string Utca { get; set; }
+        public string Jegyzekszam { get; set; }
+        public string Szerviz { get; set; }
+        public int Ferohely { get; set; }
     }
 }

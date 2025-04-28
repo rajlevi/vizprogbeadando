@@ -37,39 +37,103 @@ namespace Autokereskedes
 
         private void registerBtn_Click(object sender, RoutedEventArgs e)
         {
-            string username = UsernameTextBox.Text;
-            string joinYear = JoinYearTextBox.Text;
-            string phone = PhoneTextBox.Text;
-            string password = PasswordTextBox.Text;
+            string fullName = FullNameTextBox.Text.Trim();
+            string email = EmailTextBox.Text.Trim();
+            string password = PasswordBox.Password;
+            string confirmPassword = ConfirmPasswordBox.Password;
+            DateTime? joinDate = JoinDatePicker.Value;
 
-            if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
+            ErrorTextBlock.Visibility = Visibility.Collapsed;
+            ErrorTextBlock.Text = "";
+
+            // Validáció
+            if (string.IsNullOrWhiteSpace(fullName))
             {
-                MessageBox.Show("A felhasználónév és jelszó kötelező!", "Hiba", MessageBoxButton.OK, MessageBoxImage.Warning);
+                ShowError("A teljes név megadása kötelező!");
+                return;
+            }
+            if (string.IsNullOrWhiteSpace(email))
+            {
+                ShowError("Az email cím megadása kötelező!");
+                return;
+            }
+            if (!IsValidEmail(email))
+            {
+                ShowError("Az email cím formátuma érvénytelen!");
+                return;
+            }
+            if (joinDate == null)
+            {
+                ShowError("A csatlakozás dátuma megadása kötelező!");
+                return;
+            }
+            if (string.IsNullOrWhiteSpace(password))
+            {
+                ShowError("A jelszó megadása kötelező!");
+                return;
+            }
+            if (password.Length < 6)
+            {
+                ShowError("A jelszónak legalább 6 karakter hosszúnak kell lennie!");
+                return;
+            }
+            if (password != confirmPassword)
+            {
+                ShowError("A két jelszó nem egyezik!");
                 return;
             }
 
+            // Jogosultságkezelés: az első regisztrált admin, a többi felhasználó
+            string role = regisztraltFelhasznalok.Count == 0 ? "admin" : "felhasználó";
+
+            // Új felhasználó példányosítása
             var ujFelhasznalo = new User
             {
-                Username = username,
-                JoinYear = joinYear,
-                PhoneNumber = phone,
+                Username = fullName,
                 Password = password,
-                Role = "admin"
+                Role = role,
+                JoinYear = joinDate?.Year.ToString() ?? "",
+                PhoneNumber = email
             };
-
             regisztraltFelhasznalok.Add(ujFelhasznalo);
+            Autokereskedes.LoginPage.Felhasznalok.Add(ujFelhasznalo);
 
-           
-            MessageBoxResult result = MessageBox.Show("Sikeres regisztráció! Most jelentkezz be.", "Siker", MessageBoxButton.OK, MessageBoxImage.Information);
+            // Logolás
+            LogToFile($"Regisztráció: {fullName}, {email}, {joinDate.Value.ToShortDateString()}, szerepkör: {role}, időpont: {DateTime.Now}");
 
-            if (result == MessageBoxResult.OK)
+            // Sikeres regisztráció
+            MessageBox.Show($"Sikeres regisztráció! Most jelentkezz be.\nSzerepköröd: {role}", "Siker", MessageBoxButton.OK, MessageBoxImage.Information);
+            this.NavigationService.Navigate(new LoginPage());
+        }
+
+        private void ShowError(string message)
+        {
+            ErrorTextBlock.Text = message;
+            ErrorTextBlock.Visibility = Visibility.Visible;
+        }
+
+        private bool IsValidEmail(string email)
+        {
+            try
             {
-                
-                this.NavigationService.Navigate(new LoginPage());
+                var addr = new System.Net.Mail.MailAddress(email);
+                return addr.Address == email;
+            }
+            catch
+            {
+                return false;
             }
         }
+
+        private void LogToFile(string message)
+        {
+            try
+            {
+                System.IO.File.AppendAllText("log.txt", message + "\n");
+            }
+            catch { }
+        }
     }
-            
 }
         
             

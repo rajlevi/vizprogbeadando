@@ -20,9 +20,27 @@ namespace Autokereskedes
     /// </summary>
     public partial class Mainmenu : Page
     {
-        public Mainmenu()
+        private Register.User loggedInUser;
+        public Mainmenu(Register.User user = null)
         {
             InitializeComponent();
+            loggedInUser = user;
+            if (loggedInUser != null)
+            {
+                UserInfoTextBlock.Text = $"Bejelentkezve: {loggedInUser.Username} ({loggedInUser.Role})";
+                if (loggedInUser.Role == "admin")
+                {
+                   
+                }
+                if (loggedInUser.Role == "vásárló")
+                {
+                    szerzodesBtn.IsEnabled = false;
+                }
+            }
+            else
+            {
+                UserInfoTextBlock.Text = "Nincs bejelentkezett felhasználó!";
+            }
         }
 
         private void autokBtn_Click(object sender, RoutedEventArgs e)

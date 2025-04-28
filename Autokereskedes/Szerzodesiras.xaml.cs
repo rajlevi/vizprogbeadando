@@ -12,6 +12,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using PdfSharp.Pdf;
+using PdfSharp.Drawing;
 
 namespace Autokereskedes
 {
@@ -33,6 +35,72 @@ namespace Autokereskedes
         private void backBtn_Click(object sender, RoutedEventArgs e)
         {
             NavigationService.GoBack();
+        }
+
+        private void pdfBtn_Click(object sender, RoutedEventArgs e)
+        {
+            ErrorTextBlock.Visibility = Visibility.Collapsed;
+            ErrorTextBlock.Text = "";
+
+            // Adatok beolvasása
+            string eladoNev = EladoNevTextBox.Text.Trim();
+            string eladoCim = EladoCimTextBox.Text.Trim();
+            string vevoNev = VevoNevTextBox.Text.Trim();
+            string vevoCim = VevoCimTextBox.Text.Trim();
+            string marka = MarkaTextBox.Text.Trim();
+            string tipus = TipusTextBox.Text.Trim();
+            string evjarat = EvjaratTextBox.Text.Trim();
+            string ar = ArTextBox.Text.Trim();
+            string datum = DatumPicker.SelectedDate?.ToString("yyyy.MM.dd") ?? "";
+
+            // Validáció
+            if (string.IsNullOrWhiteSpace(eladoNev) || string.IsNullOrWhiteSpace(eladoCim) ||
+                string.IsNullOrWhiteSpace(vevoNev) || string.IsNullOrWhiteSpace(vevoCim) ||
+                string.IsNullOrWhiteSpace(marka) || string.IsNullOrWhiteSpace(tipus) ||
+                string.IsNullOrWhiteSpace(evjarat) || string.IsNullOrWhiteSpace(ar) || string.IsNullOrWhiteSpace(datum))
+            {
+                ErrorTextBlock.Text = "Minden mező kitöltése kötelező!";
+                ErrorTextBlock.Visibility = Visibility.Visible;
+                return;
+            }
+
+            try
+            {
+                // PDF generálás (PdfSharp szükséges!)
+                var dlg = new Microsoft.Win32.SaveFileDialog
+                {
+                    FileName = "szerzodes.pdf",
+                    Filter = "PDF dokumentum (*.pdf)|*.pdf"
+                };
+                if (dlg.ShowDialog() == true)
+                {
+                    var doc = new PdfDocument();
+                    doc.Info.Title = "Autó adásvételi szerződés";
+                    var page = doc.AddPage();
+                    var gfx = XGraphics.FromPdfPage(page);
+                    var font = new XFont("Times-Roman", 12);
+                    double y = 40;
+                    gfx.DrawString("Autó adásvételi szerződés", new XFont("Times-Roman", 16), XBrushes.Black, 40, y);
+                    y += 40;
+                    gfx.DrawString($"Eladó neve: {eladoNev}", font, XBrushes.Black, 40, y); y += 20;
+                    gfx.DrawString($"Eladó címe: {eladoCim}", font, XBrushes.Black, 40, y); y += 30;
+                    gfx.DrawString($"Vevő neve: {vevoNev}", font, XBrushes.Black, 40, y); y += 20;
+                    gfx.DrawString($"Vevő címe: {vevoCim}", font, XBrushes.Black, 40, y); y += 30;
+                    gfx.DrawString($"Autó márkája: {marka}", font, XBrushes.Black, 40, y); y += 20;
+                    gfx.DrawString($"Autó típusa: {tipus}", font, XBrushes.Black, 40, y); y += 20;
+                    gfx.DrawString($"Évjárat: {evjarat}", font, XBrushes.Black, 40, y); y += 20;
+                    gfx.DrawString($"Vételár: {ar} Ft", font, XBrushes.Black, 40, y); y += 30;
+                    gfx.DrawString($"Dátum: {datum}", font, XBrushes.Black, 40, y); y += 40;
+                    gfx.DrawString("Eladó aláírása: ______________________", font, XBrushes.Black, 40, y); y += 30;
+                    gfx.DrawString("Vevő aláírása: ______________________", font, XBrushes.Black, 40, y);
+                    doc.Save(dlg.FileName);
+                    MessageBox.Show("A szerződés PDF-ben elmentve!", "Siker", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Hiba a PDF mentésekor: {ex.Message}", "Hiba", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
     }
 }
